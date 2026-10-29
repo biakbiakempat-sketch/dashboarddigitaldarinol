@@ -1,1 +1,88 @@
- 
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Dari Nol — Agency OS Prototype</title>
+<style>
+:root{--bg:#f5f7fb;--panel:#fff;--text:#172033;--muted:#7b8498;--line:#e7eaf1;--nav:#151d31;--nav2:#222d46}
+*{box-sizing:border-box}body{margin:0;font:14px/1.5 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:650}input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--text)}label{display:block;font-weight:650;margin:12px 0 6px}
+#authScreen{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(145deg,#111a2e,#263653)}.auth-card{width:min(100%,420px);background:#fff;border-radius:22px;padding:30px;box-shadow:0 24px 70px #0003}.brand{font-weight:850;font-size:24px;letter-spacing:-.6px}.muted{color:var(--muted)}.primary{background:#8b1e3f;color:white}.secondary{background:#eef1f7;color:#253149}.full{width:100%;margin-top:18px}.password-wrap{display:flex;gap:8px}.password-wrap input{flex:1}.eye{background:#eef1f7;min-width:46px;font-size:18px;padding:8px}.auth-switch{text-align:center;margin-top:16px;font-size:13px}.auth-switch a{color:#8b1e3f;cursor:pointer;font-weight:700}
+#agencyApp{display:none;min-height:100vh}.layout{display:grid;grid-template-columns:255px 1fr;min-height:100vh}.sidebar{background:var(--nav);color:#edf1fb;padding:24px 16px}.sidebar .brand{font-size:20px;padding:0 10px 22px}.nav-group{margin:12px 0}.nav-head{background:transparent;color:#d8deed;width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px}.nav-items{display:none;padding:2px 0 8px 12px}.nav-group.open .nav-items{display:block}.nav-item{display:block;width:100%;background:transparent;color:#abb6cb;text-align:left;padding:9px 10px;font-weight:550}.nav-item.active,.nav-item:hover{color:white;background:var(--nav2)}.main{min-width:0}.topbar{background:#fff;border-bottom:1px solid var(--line);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:0;z-index:2}.content{padding:26px;max-width:1440px;margin:auto}.page-title{font-size:27px;font-weight:800;letter-spacing:-.7px;margin:0 0 5px}.sub{color:var(--muted);margin-bottom:24px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;min-width:0}.stat-label{color:var(--muted);font-size:12px;font-weight:700}.stat{font-size:28px;font-weight:850;margin-top:8px}.section-title{font-size:17px;font-weight:800;margin:0 0 12px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 20px}.pill{display:inline-block;padding:5px 9px;background:#f0f3f9;border-radius:20px;font-size:12px;color:#46536d}.welcome{background:linear-gradient(115deg,#fff,#fff6f7);border:1px solid #f0d9df;border-radius:18px;padding:22px;margin-bottom:18px}.two-col{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;margin-top:14px}.task-row{padding:12px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}.task-row:last-child{border-bottom:0}.small{font-size:12px;color:var(--muted)}.logout{background:#fcebef;color:#8b1e3f}.mobile-menu{display:none}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:950px){.layout{grid-template-columns:1fr}.sidebar{padding:12px;display:none}.sidebar.mobile-open{display:block}.sidebar .brand{padding:8px 10px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding:18px}.mobile-menu{display:inline-block}.two-col{grid-template-columns:1fr}}
+@media(max-width:500px){.auth-card{padding:23px}.content{padding:14px}.grid{gap:9px}.card{padding:13px}.stat{font-size:23px}.page-title{font-size:23px}.topbar{padding:12px}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<section id="authScreen">
+<div class="auth-card">
+<div class="brand">Digital Dari Nol<span style="color:#a3294d">.</span></div>
+<p class="muted" id="authSubtitle">Masuk ke Agency Command Center</p>
+<form id="loginForm">
+<label for="loginEmail">Email / Username</label><input id="loginEmail" type="text" autocomplete="username" required placeholder="Masukkan email">
+<label for="loginPassword">Password</label><div class="password-wrap"><input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Masukkan password"><button class="eye" type="button" data-toggle="loginPassword" aria-label="Tampilkan password">◉</button></div>
+<button class="primary full" type="submit">Log-in ke Dashboard</button>
+</form>
+<div id="registerBox" hidden>
+<form id="registerForm">
+<label for="regEmail">Email</label><input id="regEmail" type="email" autocomplete="email" required placeholder="nama@email.com">
+<label for="regPassword">Password (minimal 8 karakter)</label><div class="password-wrap"><input id="regPassword" type="password" minlength="8" autocomplete="new-password" required><button class="eye" type="button" data-toggle="regPassword">◉</button></div>
+<label for="regConfirm">Konfirmasi Password</label><div class="password-wrap"><input id="regConfirm" type="password" minlength="8" autocomplete="new-password" required><button class="eye" type="button" data-toggle="regConfirm">◉</button></div>
+<label for="regRole">Divisi</label><select id="regRole" required><option value="">Pilih divisi</option><option>Creative</option><option>Monitoring CS</option><option>Ads Specialist</option><option>Finance</option><option>Project Manager</option><option>Training</option></select>
+<button class="primary full" type="submit">Daftar Akun</button>
+</form>
+</div>
+<div class="auth-switch"><span id="switchText">Belum punya akun?</span> <a id="switchAuth">Daftar</a></div>
+<p id="authMessage" role="status" style="color:#a3294d;font-size:13px"></p>
+</div></section>
+<div id="agencyApp">
+<div class="layout">
+<aside class="sidebar" id="sidebar"><div class="brand">Digital Dari Nol<span style="color:#ec789a">.</span></div><div class="small" style="color:#9ca8bf;padding:0 10px 12px">AGENCY WORKSPACE</div><nav id="navigation"></nav></aside>
+<main class="main">
+<header class="topbar"><div style="display:flex;align-items:center;gap:10px"><button class="secondary mobile-menu" id="mobileMenu">☰</button><div><strong id="topTitle">Command Center</strong><div class="small" id="topSub">Agency overview</div></div></div><div style="display:flex;align-items:center;gap:10px"><span class="pill" id="rolePill">Owner</span><button class="logout" id="logoutBtn">Keluar</button></div></header>
+<div class="content" id="pageContent"></div>
+</main></div></div>
+<script>
+(function(){
+'use strict';
+const OWNER_EMAIL='digitaldarinolagency@gmail.com';
+const OWNER_PASSWORD='1000klien';
+const roles=['Owner','Creative','Monitoring CS','Ads Specialist','Finance','Project Manager','Training'];
+const groups=[
+{title:'COMMAND CENTER',items:[['overview','Ringkasan'],['tasks','Task Board'],['calendar','Kalender & Agenda']]},
+{title:'OPERASIONAL',items:[['projects','Proyek'],['clients','Klien'],['content','Konten & Kreatif']]},
+{title:'PERTUMBUHAN',items:[['marketing','Marketing & Ads'],['finance','Keuangan'],['reports','Laporan']]},
+{title:'MANAJEMEN',items:[['team','Tim & Divisi'],['settings','Pengaturan']]}
+];
+let currentUser=null,currentPage='overview',authMode='login';
+const $=id=>document.getElementById(id);
+function safeGet(key){try{return localStorage.getItem(key)}catch(e){return null}}
+function safeSet(key,value){try{localStorage.setItem(key,value);return true}catch(e){return false}}
+function safeRemove(key){try{localStorage.removeItem(key)}catch(e){}}
+function showMessage(msg){$('authMessage').textContent=msg}
+function users(){try{return JSON.parse(safeGet('ddn_users')||'{}')}catch(e){return {}}}
+function setMode(mode){authMode=mode; $('loginForm').hidden=mode!=='login';$('registerBox').hidden=mode!=='register';$('authSubtitle').textContent=mode==='login'?'Masuk ke Agency Command Center':'Buat akun anggota tim';$('switchText').textContent=mode==='login'?'Belum punya akun?':'Sudah punya akun?';$('switchAuth').textContent=mode==='login'?'Daftar':'Log-in';showMessage('')}
+$('switchAuth').addEventListener('click',()=>setMode(authMode==='login'?'register':'login'));
+document.querySelectorAll('[data-toggle]').forEach(btn=>btn.addEventListener('click',()=>{const input=$(btn.dataset.toggle);input.type=input.type==='password'?'text':'password';btn.textContent=input.type==='password'?'◉':'◎';btn.setAttribute('aria-label',input.type==='password'?'Tampilkan password':'Sembunyikan password')}));
+async function hashPassword(pass){if(window.crypto&&crypto.subtle){try{const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(pass));return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,'0')).join('')}catch(e){}}return 'demo-'+pass}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();showMessage('');const email=$('loginEmail').value.trim().toLowerCase(),pass=$('loginPassword').value;
+if(email===OWNER_EMAIL&&pass===OWNER_PASSWORD){enterApp({email:OWNER_EMAIL,role:'Owner'});return}
+const u=users()[email];if(!u){showMessage('Akun tidak ditemukan. Silakan daftar terlebih dahulu.');return}if(u.passwordHash!==await hashPassword(pass)){showMessage('Password belum tepat.');return}enterApp({email,role:u.role||'Creative'});});
+$('registerForm').addEventListener('submit',async e=>{e.preventDefault();const email=$('regEmail').value.trim().toLowerCase(),pass=$('regPassword').value,confirm=$('regConfirm').value,role=$('regRole').value;if(pass.length<8){showMessage('Password minimal 8 karakter.');return}if(pass!==confirm){showMessage('Konfirmasi password tidak sama.');return}if(email===OWNER_EMAIL){showMessage('Email ini digunakan untuk akun Owner.');return}const all=users();if(all[email]){showMessage('Email sudah terdaftar.');return}all[email]={passwordHash:await hashPassword(pass),role};if(!safeSet('ddn_users',JSON.stringify(all))){showMessage('Browser membatasi penyimpanan akun. Coba buka file di Chrome.');return}enterApp({email,role});});
+function enterApp(user){currentUser=user;try{sessionStorage.setItem('ddn_session',JSON.stringify(user))}catch(e){}$('authScreen').style.display='none';$('agencyApp').style.display='block';buildNav();renderPage(); }
+function logout(){currentUser=null;try{sessionStorage.removeItem('ddn_session')}catch(e){}$('agencyApp').style.display='none';$('authScreen').style.display='grid';$('loginPassword').value='';showMessage('')}
+$('logoutBtn').addEventListener('click',logout);$('mobileMenu').addEventListener('click',()=>$('sidebar').classList.toggle('mobile-open'));
+function allowed(page){if(!currentUser)return false;if(currentUser.role==='Owner')return true;const map={'overview':['Creative','Monitoring CS','Ads Specialist','Finance','Project Manager','Training'],'tasks':['Creative','Monitoring CS','Ads Specialist','Finance','Project Manager','Training'],'calendar':['Creative','Monitoring CS','Ads Specialist','Project Manager','Training'],'projects':['Creative','Project Manager'],'clients':['Monitoring CS','Project Manager'],'content':['Creative','Training'],'marketing':['Ads Specialist'],'finance':['Finance'],'reports':['Project Manager','Finance'],'team':[],'settings':[]};return (map[page]||[]).includes(currentUser.role)}
+function buildNav(){const nav=$('navigation');nav.innerHTML='';groups.forEach((group,idx)=>{const visible=group.items.filter(([id])=>allowed(id));if(!visible.length)return;const wrap=document.createElement('div');wrap.className='nav-group'+(visible.some(([id])=>id===currentPage)?' open':'');const head=document.createElement('button');head.className='nav-head';head.innerHTML='<span>'+group.title+'</span><span>⌄</span>';head.addEventListener('click',()=>{nav.querySelectorAll('.nav-group').forEach(g=>{if(g!==wrap)g.classList.remove('open')});wrap.classList.toggle('open')});const items=document.createElement('div');items.className='nav-items';visible.forEach(([id,label])=>{const b=document.createElement('button');b.className='nav-item'+(id===currentPage?' active':'');b.textContent=label;b.addEventListener('click',()=>{currentPage=id;buildNav();renderPage();$('sidebar').classList.remove('mobile-open')});items.appendChild(b)});wrap.append(head,items);nav.appendChild(wrap)});$('rolePill').textContent=currentUser.role}
+const pageNames={overview:'Command Center',tasks:'Task Board',calendar:'Kalender & Agenda',projects:'Proyek',clients:'Klien',content:'Konten & Kreatif',marketing:'Marketing & Ads',finance:'Keuangan',reports:'Laporan',team:'Tim & Divisi',settings:'Pengaturan'};
+function stat(label,value,note){return '<div class="card"><div class="stat-label">'+label+'</div><div class="stat">'+value+'</div><div class="small">'+note+'</div></div>'}
+function renderPage(){if(!allowed(currentPage)){currentPage='overview';buildNav()}const title=pageNames[currentPage]||'Command Center';$('topTitle').textContent=title;$('topSub').textContent='Digital Dari Nol Agency Workspace';let html='';
+if(currentPage==='overview'){html='<section class="welcome"><div class="pill">AGENCY COMMAND CENTER</div><h1 class="page-title" style="margin-top:12px">Halo, '+(currentUser.role==='Owner'?'Owner':'Tim '+currentUser.role)+' 👋</h1><p class="muted">Pantau prioritas, pekerjaan, dan progres tim dari satu tempat.</p><div class="actions"><button class="primary" data-page="tasks">＋ Buat / Lihat Task</button><button class="secondary" data-page="projects">Lihat Proyek</button><button class="secondary" data-page="reports">Buka Laporan</button></div></section><div class="grid">'+stat('TASK AKTIF','12','Contoh data awal')+stat('PROYEK BERJALAN','4','Contoh data awal')+stat('KLIEN AKTIF','8','Contoh data awal')+stat('TARGET BULAN INI','Rp 50 jt','Contoh data awal')+'</div><div class="two-col"><section class="card"><h2 class="section-title">Prioritas Hari Ini</h2><div class="task-row"><span><strong>Review konten mingguan</strong><div class="small">Creative · Hari ini</div></span><span class="pill">Prioritas</span></div><div class="task-row"><span><strong>Evaluasi kampanye iklan</strong><div class="small">Ads Specialist · Hari ini</div></span><span class="pill">Berjalan</span></div><div class="task-row"><span><strong>Follow-up calon klien</strong><div class="small">Monitoring CS · Hari ini</div></span><span class="pill">Task</span></div></section><section class="card"><h2 class="section-title">Mulai dari Sini</h2><p class="muted">Gunakan pintasan untuk menuju pekerjaan utama. Angka di atas masih data contoh.</p><button class="secondary" data-page="calendar">Buka Kalender</button><div style="height:8px"></div><button class="secondary" data-page="team">Kelola Tim</button></section></div>'}
+else if(currentPage==='tasks'){html='<h1 class="page-title">Task Board</h1><p class="sub">Daftar pekerjaan contoh untuk prototype.</p><section class="card"><div class="actions"><button class="primary" id="newTask">＋ Tambah Task</button><span class="pill">Belum terhubung ke database</span></div><div id="taskList"><div class="task-row"><span><strong>Review konten campaign</strong><div class="small">Creative · Due hari ini</div></span><span class="pill">To do</span></div><div class="task-row"><span><strong>Cek performa iklan</strong><div class="small">Ads Specialist · Due besok</div></span><span class="pill">In progress</span></div></div></section>'}
+else {const copy={calendar:['Kalender & Agenda','Atur jadwal kegiatan, deadline, dan meeting tim.'],projects:['Daftar Proyek','Pantau status proyek, PIC, dan tenggat waktu.'],clients:['Database Klien','Daftar klien dan catatan komunikasi.'],content:['Konten & Kreatif','Rencanakan ide, produksi, dan status konten.'],marketing:['Marketing & Ads','Pantau kampanye, budget, leads, dan hasil iklan.'],finance:['Keuangan','Ringkasan pemasukan, pengeluaran, dan anggaran.'],reports:['Laporan','Ringkasan performa dan progres tim.'],team:['Tim & Divisi','Kelola anggota dan hak akses tiap divisi.'],settings:['Pengaturan','Preferensi workspace dan akun.']};const item=copy[currentPage]||['Workspace',''];html='<h1 class="page-title">'+item[0]+'</h1><p class="sub">'+item[1]+'</p><section class="card"><h2 class="section-title">Area kerja '+item[0]+'</h2><p class="muted">Tampilan ini masih berupa prototype. Data belum disimpan ke server/database.</p><div class="actions"><button class="primary" data-page="tasks">Buka Task Board</button><button class="secondary" data-page="overview">Kembali ke Command Center</button></div></section>'}
+$('pageContent').innerHTML=html;$('pageContent').querySelectorAll('[data-page]').forEach(btn=>btn.addEventListener('click',()=>{currentPage=btn.dataset.page;if(!allowed(currentPage))currentPage='overview';buildNav();renderPage()}));const newTask=$('newTask');if(newTask)newTask.addEventListener('click',()=>{const name=prompt('Nama task baru:');if(name&&name.trim()){const row=document.createElement('div');row.className='task-row';row.innerHTML='<span><strong></strong><div class="small">Baru dibuat</div></span><span class="pill">To do</span>';row.querySelector('strong').textContent=name.trim();$('taskList').appendChild(row)}})}
+})();
+</script>
+</body>
+</html>
